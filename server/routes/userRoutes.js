@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser } = require('../controllers/userControllers');
 
-// Route: Register a store owner
+// Store Owner Registration
 router.post('/register', registerUser);
 
-// Route: Login a store owner
+// Store Owner Login
 router.post('/login', loginUser);
 
 module.exports = router;

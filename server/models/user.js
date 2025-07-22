@@ -1,27 +1,15 @@
 const mongoose = require('mongoose');
 
-// Define the schema for the shop owner (user)
-const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    shopName: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true // email should be unique
-    },
-    password: {
-        type: String,
+const productSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    brand: { type: String },
+    price: { type: Number, required: true },
+    quantity: { type: Number, required: true },
+    store: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Store',
         required: true
     }
-}, {
-    timestamps: true // adds createdAt and updatedAt fields
-});
+}, { timestamps: true });
 
-// Export the model
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Product', productSchema);

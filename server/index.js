@@ -1,3 +1,4 @@
+const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 const storeRoutes = require('./routes/storeRoutes');
 app.use('/api/stores', storeRoutes);
+app.use('/api/products', productRoutes);
 
 
 
