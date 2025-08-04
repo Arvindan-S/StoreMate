@@ -6,7 +6,9 @@ const jwt = require('jsonwebtoken');
 const registerUser = async (req, res) => {
     try {
         const { name, shopName, email, password } = req.body;
-
+        if (!name || !shopName || !email || !password) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
         const existingUser = await User.findOne({ email });
         if (existingUser) return res.status(400).json({ message: 'User already exists' });
 
@@ -17,7 +19,7 @@ const registerUser = async (req, res) => {
 
         res.status(201).json({ message: 'Store owner registered successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Registration failed', error });
+        res.status(500).json({ message: 'Registration failed', error: error.message });
     }
 };
 
@@ -25,7 +27,9 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and password are required' });
+        }
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ message: 'User not found' });
 
@@ -45,7 +49,7 @@ const loginUser = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: 'Login failed', error });
+        res.status(500).json({ message: 'Login failed', error: error.message });
     }
 };
 

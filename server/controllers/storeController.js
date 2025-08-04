@@ -1,5 +1,22 @@
 const Store = require('../models/store');
 
+// Delete a store (only by owner)
+const deleteStore = async (req, res) => {
+    try {
+        const store = await Store.findById(req.params.id);
+        if (!store) {
+            return res.status(404).json({ message: 'Store not found' });
+        }
+        if (store.owner.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'Not authorized to delete this store' });
+        }
+        await store.deleteOne();
+        res.status(200).json({ message: 'Store deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong', error });
+    }
+};
+
 // ✅ Create Store
 const createStore = async (req, res) => {
     try {
@@ -11,17 +28,19 @@ const createStore = async (req, res) => {
 
         const store = new Store({
             name,
-            owner: req.user.id, // from authMiddleware
+            owner: req.user._id,
             location,
             contactEmail,
-            contactPhone
+            contactPhone,
+            status: 'active'
         });
 
         await store.save();
         res.status(201).json({ message: 'Store created successfully', store });
 
     } catch (error) {
-        res.status(500).json({ message: 'Something went wrong', error });
+        console.error('Store creation error:', error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 };
 
@@ -35,14 +54,14 @@ const getStores = async (req, res) => {
     }
 };
 
-// Get stores for the logged-in user
 const getMyStores = async (req, res) => {
     try {
-        const stores = await Store.find({ owner: req.user.id });
+        const stores = await Store.find({ owner: req.user._id });
         res.status(200).json(stores);
     } catch (error) {
-        res.status(500).json({ message: 'Something went wrong', error });
+        console.error('Get stores error:', error);
+        res.status(500).json({ message: 'Something went wrong', error: error.message });
     }
 };
 
-module.exports = { createStore, getStores, getMyStores };
+module.exports = { createStore, getStores, getMyStores, deleteStore };

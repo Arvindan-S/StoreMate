@@ -2,6 +2,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import "./styles/global.css";
+import "./styles/auth.css";
+import "./styles/navbar.css";
+import "./styles/dashboard.css";
 
 function App() {
   return (
